@@ -1,0 +1,44 @@
+from tkinter import *
+
+def add():
+    result.set(float(entry1.get()) + float(entry2.get()))
+
+def subtract():
+    result.set(float(entry1.get()) - float(entry2.get()))
+
+def multiply():
+    result.set(float(entry1.get()) * float(entry2.get()))
+
+def divide():
+    try:
+        result.set(float(entry1.get()) / float(entry2.get()))
+    except ZeroDivisionError:
+        result.set("Error")
+
+# Create main window
+window = Tk()
+window.title("Simple Calculator")
+
+# Set window size (width x height)
+window.geometry("400x300")  # Adjust this to make the window larger
+
+# Create input fields
+entry1 = Entry(window)
+entry1.pack(pady=10)
+
+entry2 = Entry(window)
+entry2.pack(pady=10)
+
+# Result entry box (used Entry widget to create a box-like area)
+result = StringVar()
+result_entry = Entry(window, textvariable=result, state="readonly", bd=3, font=("Arial", 14), width=20)
+result_entry.pack(pady=10)
+
+# Create buttons
+Button(window, text="Add", command=add).pack(side=LEFT, padx=20)
+Button(window, text="Subtract", command=subtract).pack(side=LEFT, padx=20)
+Button(window, text="Multiply", command=multiply).pack(side=LEFT, padx=20)
+Button(window, text="Divide", command=divide).pack(side=LEFT, padx=20)
+
+# Start the main loop
+window.mainloop()

@@ -1,0 +1,38 @@
+from tkinter import *
+
+def validateLogin():
+    print("Username:", username.get())
+    print("Password:", password.get())
+    loginSuccess.config(text="Login Successful")
+
+def clearLogin():
+    usernameEntry.delete(0, 'end')
+    passwordEntry.delete(0, 'end')
+    loginSuccess.config(text="")
+
+# Initialize window
+tkWindow = Tk()
+tkWindow.geometry('300x200')
+tkWindow.title('Login Form')
+
+# Username and Password input fields
+username = StringVar()
+password = StringVar()
+
+Label(tkWindow, text="Username").grid(row=0, column=0)
+usernameEntry = Entry(tkWindow, textvariable=username)
+usernameEntry.grid(row=0, column=1)
+
+Label(tkWindow, text="Password").grid(row=1, column=0)
+passwordEntry = Entry(tkWindow, textvariable=password, show='*')
+passwordEntry.grid(row=1, column=1)
+
+# Result Label
+loginSuccess = Label(tkWindow, text="")
+loginSuccess.grid(row=3, column=1)
+
+# Buttons
+Button(tkWindow, text="Login", command=validateLogin).grid(row=2, column=0)
+Button(tkWindow, text="Clear", command=clearLogin).grid(row=2, column=1)
+
+tkWindow.mainloop()

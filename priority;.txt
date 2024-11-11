@@ -1,0 +1,63 @@
+package pripority;
+import java.util.Scanner;
+
+public class priority {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        
+        int numProcesses;  
+        System.out.print("Enter number of processes: ");
+	numProcesses = s.nextInt();
+        
+        int[] processID = new int[numProcesses], burstTime = new int[numProcesses], priority = new int[numProcesses];
+        int[] waitTime = new int[numProcesses], turnAroundTime = new int[numProcesses];
+        System.out.println("Enter CPU burst time and priority for each process:");
+
+        for (int i = 0; i < numProcesses; i++) {
+            System.out.print("Process[" + (i + 1) + "] Burst Time: ");
+            burstTime[i] = s.nextInt();
+            System.out.print("Process[" + (i + 1) + "] Priority: ");
+            priority[i] = s.nextInt();
+            processID[i] = i + 1;  
+        }
+
+        // Sort by priority (desc)
+        for (int i = 0; i < numProcesses - 1; i++) {
+            for (int j = i + 1; j < numProcesses; j++) {
+                if (priority[i] < priority[j]) {
+                    swap(processID, i, j);
+                    swap(burstTime, i, j);
+                    swap(priority, i, j);
+                }
+            }
+        }
+
+        waitTime[0] = 0; turnAroundTime[0] = burstTime[0];
+        int totalWaitTime = 0, totalTurnAroundTime = turnAroundTime[0];
+
+        for (int i = 1; i < numProcesses; i++) {
+            waitTime[i] = turnAroundTime[i - 1];  
+            turnAroundTime[i] = waitTime[i] + burstTime[i];  
+            totalWaitTime += waitTime[i];
+            totalTurnAroundTime += turnAroundTime[i];
+        }
+
+        // Output
+        System.out.println("\nProcess | Burst Time | Wait Time | Turnaround Time | Priority");
+        for (int i = 0; i < numProcesses; i++) {
+            System.out.printf("%d        | %d          | %d         | %d            | %d\n", 
+                              processID[i], burstTime[i], waitTime[i], turnAroundTime[i], priority[i]);
+        }
+        
+        System.out.printf("\nAverage Wait Time: %.2f\nAverage Turnaround Time: %.2f\n", 
+                          (double) totalWaitTime / numProcesses, (double) totalTurnAroundTime / numProcesses);
+    }
+    
+    // Swap helper function
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+

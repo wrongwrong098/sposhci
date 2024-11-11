@@ -1,0 +1,40 @@
+package assignment;
+
+import java.util.concurrent.Semaphore;
+
+public class ReaderWriter {
+    static Semaphore db = new Semaphore(1);  
+    static Semaphore mutex = new Semaphore(1);  
+    static int readCount = 0;
+
+    static void reader() throws InterruptedException {
+        mutex.acquire();
+        readCount++;
+        if (readCount == 1) db.acquire();  // First reader locks the database
+        mutex.release();
+
+        System.out.println("User Reading the Data...");
+        Thread.sleep(1000);
+
+        mutex.acquire();
+        readCount--;
+        if (readCount == 0) db.release();  // Last reader releases the database
+        mutex.release();
+        System.out.println("Reading Finished!");
+    }
+
+    static void writer() throws InterruptedException {
+        db.acquire();
+        System.out.println("Writing on the database...");
+        Thread.sleep(1000);
+        db.release();
+        System.out.println("Writing Finished!");
+    }
+
+    public static void main(String[] args) throws Exception {
+    	
+            writer();   // Direct call to writer
+            reader();   // Direct call to reader
+       
+    }
+}

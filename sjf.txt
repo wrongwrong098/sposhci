@@ -1,0 +1,65 @@
+package sjf;
+
+import java.util.Scanner;
+
+class SJF {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+
+        System.out.print("Enter the number of processes: ");
+        int n = s.nextInt();
+
+        int[] burstTime = new int[n];
+        int[] waitingTime = new int[n];
+        int[] turnaroundTime = new int[n];
+        int[] process = new int[n];
+        
+        System.out.println("Enter Burst Time for each process:");
+        for (int i = 0; i < n; i++) {
+            System.out.print("Process[" + (i + 1) + "]: ");
+            burstTime[i] = s.nextInt();
+            process[i] = i + 1;  // process ID
+        }
+
+        // Sort processes by burst time (Shortest Job First)
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (burstTime[j] < burstTime[i]) {
+                    // Swap burst time
+                    int temp = burstTime[i];
+                    burstTime[i] = burstTime[j];
+                    burstTime[j] = temp;
+
+                    // Swap process ID
+                    temp = process[i];
+                    process[i] = process[j];
+                    process[j] = temp;
+                }
+            }
+        }
+
+        // Calculate waiting time and turnaround time
+        waitingTime[0] = 0;
+        float totalWaitTime = 0, totalTurnaroundTime = 0;
+        
+        for (int i = 1; i < n; i++) {
+            waitingTime[i] = waitingTime[i - 1] + burstTime[i - 1];
+            totalWaitTime += waitingTime[i];
+        }
+
+        System.out.println("\nProcess | Burst Time | Waiting Time | Turnaround Time");
+        System.out.println("------------------------------------------------------");
+        
+        for (int i = 0; i < n; i++) {
+            turnaroundTime[i] = waitingTime[i] + burstTime[i];
+            totalTurnaroundTime += turnaroundTime[i];
+
+            System.out.println("P" + process[i] + "\t|\t" + burstTime[i] + "\t|\t" + waitingTime[i] + "\t|\t" + turnaroundTime[i]);
+        }
+
+        System.out.printf("\nAverage Waiting Time: %.2f\n", totalWaitTime / n);
+        System.out.printf("Average Turnaround Time: %.2f\n", totalTurnaroundTime / n);
+        
+        s.close();
+    }
+}

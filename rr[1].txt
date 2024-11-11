@@ -1,0 +1,62 @@
+import java.util.Scanner;
+
+public class RoundRobinScheduler {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Initialize arrays to store the wait times, burst times, and remaining times for each process.
+        int[] waitTimes = new int[10];        // Wait time for each process
+        int[] burstTimes = new int[10];       // Burst time (total time required by each process)
+        int[] rt = new int[10];               // Remaining time for each process (initially equal to burst time)
+
+        // Input the number of processes (up to a maximum of 10)
+        System.out.print("Enter number of processes (MAX 10): ");
+        int n = scanner.nextInt(); // Number of processes
+        
+        // Collect the burst time for each process
+        System.out.print("Enter burst time for each process:\n");
+        for (int i = 0; i < n; i++) {
+            System.out.print("P[" + (i + 1) + "]: ");
+            burstTimes[i] = scanner.nextInt();   // Read burst time for process P[i]
+            rt[i] = burstTimes[i];               // Set remaining time for process P[i] equal to its burst time initially
+            waitTimes[i] = 0;                    // Initialize wait time to 0 for each process
+        }
+
+        // Input time quantum
+        System.out.print("Enter time quantum: ");
+        int timeQuantum = scanner.nextInt();
+
+        int rp = n;              // Total number of processes left to complete
+        int i = 0;               // Process index, cycling through 0 to n-1
+        int currentTime = 0;     // Total elapsed time in the scheduler
+
+        System.out.print("0");   // Print the starting time (0) for the timeline
+
+        // Start the Round Robin Scheduling
+        while (rp > 0) {   // Continue until all processes are finished
+            // Only act on processes that have remaining time
+            if (rt[i] > 0) {
+                System.out.print(" | P[" + (i + 1) + "] | ");   // Print process name in the timeline
+
+                // Check if the remaining time of process P[i] is more than the time quantum
+                if (rt[i] > timeQuantum) {
+                    // Deduct the time quantum from the remaining time
+                    currentTime += timeQuantum;   // Increment the total elapsed time
+                    rt[i] -= timeQuantum;         // Deduct time quantum from the remaining time of P[i]
+                } else {
+                    // If remaining time is less than or equal to time quantum
+                    currentTime += rt[i];         // Add the remaining time of P[i] to total time
+                    rt[i] = 0;                    // Set remaining time of P[i] to 0, meaning it's complete
+                    rp--;                         // Decrease count of remaining processes
+                }
+
+                System.out.print(currentTime);   // Print the current elapsed time after executing the process
+            }
+            
+            // Move to the next process in a circular manner
+            i = (i + 1) % n;
+        }
+        
+        scanner.close();  // Close the scanner
+    }
+}
